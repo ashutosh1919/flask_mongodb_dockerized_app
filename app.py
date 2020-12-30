@@ -19,10 +19,17 @@ def ping_server():
 
 @app.route('/animals')
 def get_stored_animals():
-    db = get_db()
-    _animals = db.animal_tb.find()
-    animals = [{"id": animal["id"], "name": animal["name"], "type": animal["type"]} for animal in _animals]
-    return jsonify({"animals": animals})
+    db=""
+    try:
+        db = get_db()
+        _animals = db.animal_tb.find()
+        animals = [{"id": animal["id"], "name": animal["name"], "type": animal["type"]} for animal in _animals]
+        return jsonify({"animals": animals})
+    except:
+        pass
+    finally:
+        if type(db)==MongoClient:
+            db.close()
 
 if __name__=='__main__':
     app.run(host="0.0.0.0", port=5000)
